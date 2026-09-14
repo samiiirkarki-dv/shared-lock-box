@@ -14,13 +14,230 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      access_requests: {
+        Row: {
+          approver_id: string
+          created_at: string
+          decided_at: string | null
+          id: string
+          item_id: string
+          pin_verified: boolean
+          requester_id: string
+          status: string
+          unlock_expires_at: string | null
+        }
+        Insert: {
+          approver_id: string
+          created_at?: string
+          decided_at?: string | null
+          id?: string
+          item_id: string
+          pin_verified?: boolean
+          requester_id: string
+          status?: string
+          unlock_expires_at?: string | null
+        }
+        Update: {
+          approver_id?: string
+          created_at?: string
+          decided_at?: string | null
+          id?: string
+          item_id?: string
+          pin_verified?: boolean
+          requester_id?: string
+          status?: string
+          unlock_expires_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_requests_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "vault_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      activity_events: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          id: string
+          message: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      connections: {
+        Row: {
+          addressee_id: string
+          created_at: string
+          id: string
+          requester_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          addressee_id: string
+          created_at?: string
+          id?: string
+          requester_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          addressee_id?: string
+          created_at?: string
+          id?: string
+          requester_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          actor_id: string | null
+          body: string | null
+          created_at: string
+          entity_id: string | null
+          id: string
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          body?: string | null
+          created_at?: string
+          entity_id?: string | null
+          id?: string
+          read?: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          body?: string | null
+          created_at?: string
+          entity_id?: string | null
+          id?: string
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      vault_items: {
+        Row: {
+          approver_id: string | null
+          created_at: string
+          id: string
+          mime_type: string | null
+          name: string
+          owner_id: string
+          pin_hash: string | null
+          size_bytes: number
+          storage_path: string
+          unlock_seconds: number
+          visibility: string
+        }
+        Insert: {
+          approver_id?: string | null
+          created_at?: string
+          id?: string
+          mime_type?: string | null
+          name: string
+          owner_id: string
+          pin_hash?: string | null
+          size_bytes?: number
+          storage_path: string
+          unlock_seconds?: number
+          visibility?: string
+        }
+        Update: {
+          approver_id?: string | null
+          created_at?: string
+          id?: string
+          mime_type?: string | null
+          name?: string
+          owner_id?: string
+          pin_hash?: string | null
+          size_bytes?: number
+          storage_path?: string
+          unlock_seconds?: number
+          visibility?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      are_connected: { Args: { a: string; b: string }; Returns: boolean }
+      log_activity: {
+        Args: {
+          p_actor: string
+          p_message: string
+          p_type: string
+          p_user: string
+        }
+        Returns: undefined
+      }
+      notify: {
+        Args: {
+          p_actor: string
+          p_body: string
+          p_entity: string
+          p_title: string
+          p_type: string
+          p_user: string
+        }
+        Returns: undefined
+      }
+      uname: { Args: { p: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
