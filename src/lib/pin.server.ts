@@ -39,13 +39,15 @@ export async function hashPin(pin: string): Promise<string> {
 
 export async function verifyPin(pin: string, stored: string): Promise<boolean> {
   const parts = stored.split("$");
-  if (parts.length !== 4 || parts[0] !== "pbkdf2") return false;
-  const salt = fromBase64(parts[2]);
-  const expected = fromBase64(parts[3]);
+  const saltPart = parts[2];
+  const hashPart = parts[3];
+  if (parts.length !== 4 || parts[0] !== "pbkdf2" || !saltPart || !hashPart) return false;
+  const salt = fromBase64(saltPart);
+  const expected = fromBase64(hashPart);
   const actual = await derive(pin, salt);
   if (actual.length !== expected.length) return false;
   // constant-time comparison
   let diff = 0;
-  for (let i = 0; i < actual.length; i++) diff |= actual[i] ^ expected[i];
+  for (let i = 0; i < actual.length; i++) diff |= (actual[i] ?? 0) ^ (expected[i] ?? 0);
   return diff === 0;
 }
