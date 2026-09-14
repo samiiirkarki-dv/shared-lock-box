@@ -21,6 +21,7 @@ export type Database = {
           decided_at: string | null
           id: string
           item_id: string
+          pin_attempts: number
           pin_verified: boolean
           requester_id: string
           status: string
@@ -32,6 +33,7 @@ export type Database = {
           decided_at?: string | null
           id?: string
           item_id: string
+          pin_attempts?: number
           pin_verified?: boolean
           requester_id: string
           status?: string
@@ -43,6 +45,7 @@ export type Database = {
           decided_at?: string | null
           id?: string
           item_id?: string
+          pin_attempts?: number
           pin_verified?: boolean
           requester_id?: string
           status?: string
@@ -166,6 +169,27 @@ export type Database = {
           display_name?: string | null
           id?: string
           username?: string
+        }
+        Relationships: []
+      }
+      rate_events: {
+        Row: {
+          action: string
+          created_at: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: number
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: number
+          user_id?: string
         }
         Relationships: []
       }
