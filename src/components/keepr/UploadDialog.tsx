@@ -52,12 +52,12 @@ export function UploadDialog({
   }
 
   async function submit() {
-    if (!file) return toast.error("Choose a file first");
+    if (!file) { toast.error("Choose a file first"); return; }
     if (visibility === "protected" && !approverId) {
-      return toast.error("Pick a trusted person to approve access");
+      { toast.error("Pick a trusted person to approve access"); return; }
     }
     if (visibility === "protected" && pin && pin.length < 4) {
-      return toast.error("The PIN needs at least 4 characters");
+      { toast.error("The PIN needs at least 4 characters"); return; }
     }
     setBusy(true);
     try {
