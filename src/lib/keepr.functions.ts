@@ -115,7 +115,12 @@ export const updateProtection = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    const patch: Record<string, unknown> = {
+    const patch: {
+      visibility: string;
+      approver_id: string | null;
+      unlock_seconds: number;
+      pin_hash?: string | null;
+    } = {
       visibility: data.visibility,
       approver_id: data.visibility === "protected" ? data.approverId : null,
       unlock_seconds: data.unlockSeconds,
