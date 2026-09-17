@@ -23,7 +23,13 @@ const ICON: Record<ItemStatus, typeof Lock> = {
   expired: TimerOff,
 };
 
-export function StatusBadge({ status, extra }: { status: ItemStatus; extra?: string }) {
+export function StatusBadge({
+  status,
+  extra,
+}: {
+  status: ItemStatus;
+  extra?: string | undefined;
+}) {
   const Icon = ICON[status];
   return (
     <span
