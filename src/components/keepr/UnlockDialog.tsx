@@ -80,9 +80,16 @@ export function UnlockDialog({
     if (!request) return;
     setBusy(true);
     try {
-      await unlock({
+      const result = await unlock({
         data: { requestId: request.id, ...(hasPin ? { pin } : {}) },
       });
+      if (!result.ok) {
+        setShake(true);
+        setTimeout(() => setShake(false), 450);
+        toast.error(result.message);
+        onDone();
+        return;
+      }
       toast.success("Unlocked — the file will lock itself again soon");
       setPin("");
       onDone();
