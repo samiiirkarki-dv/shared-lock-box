@@ -254,7 +254,7 @@ export const beginUnlock = createServerFn({ method: "POST" })
       .update({ pin_verified: true, unlock_expires_at: unlockExpiresAt })
       .eq("id", request.id);
     if (error) throw new Error(error.message);
-    return { unlockExpiresAt };
+    return { ok: true as const, unlockExpiresAt };
   });
 
 /**
