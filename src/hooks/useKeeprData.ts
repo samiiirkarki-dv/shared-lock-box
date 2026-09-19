@@ -64,6 +64,9 @@ export function useKeeprData(userId: string | undefined) {
     enabled: Boolean(userId),
     queryFn: () => fetchKeeprData(userId!),
     staleTime: 5_000,
+    // live updates arrive over realtime; this is only a safety net
+    refetchInterval: 15_000,
+    refetchOnWindowFocus: true,
   });
 
   useEffect(() => {

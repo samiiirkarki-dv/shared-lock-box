@@ -212,10 +212,13 @@ export const beginUnlock = createServerFn({ method: "POST" })
     if (!request || request.requester_id !== context.userId) throw new Error("Request not found");
     if (request.status !== "approved") throw new Error("This request has not been approved");
     if (request.unlock_expires_at && new Date(request.unlock_expires_at).getTime() > Date.now()) {
-      return { unlockExpiresAt: request.unlock_expires_at };
+      return { ok: true as const, unlockExpiresAt: request.unlock_expires_at };
     }
     if (request.unlock_expires_at) {
-      throw new Error("This access window already expired. Request approval again.");
+      return {
+        ok: false as const,
+        message: "This access window already expired. Request approval again.",
+      };
     }
 
     const { data: item } = await admin
@@ -226,10 +229,13 @@ export const beginUnlock = createServerFn({ method: "POST" })
     if (!item) throw new Error("File not found");
 
     if (item.pin_hash) {
-      if (!data.pin) throw new Error("This file needs its security PIN");
+      if (!data.pin) return { ok: false as const, message: "This file needs its security PIN" };
       if ((request.pin_attempts ?? 0) >= 5) {
         await admin.from("access_requests").update({ status: "cancelled" }).eq("id", request.id);
-        throw new Error("Too many incorrect PIN attempts. Request approval again.");
+        return {
+          ok: false as const,
+          message: "Too many incorrect PIN attempts. Request approval again.",
+        };
       }
       const { verifyPin } = await import("./pin.server");
       const ok = await verifyPin(data.pin, item.pin_hash);
@@ -238,7 +244,7 @@ export const beginUnlock = createServerFn({ method: "POST" })
           .from("access_requests")
           .update({ pin_attempts: (request.pin_attempts ?? 0) + 1 })
           .eq("id", request.id);
-        throw new Error("Incorrect PIN");
+        return { ok: false as const, message: "Incorrect PIN" };
       }
     }
 
